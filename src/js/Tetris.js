@@ -1,47 +1,43 @@
-let scale = 30
-let squareNum = 5
+let scale = 50
+let squareNum = 6
 let grid = []
 
 let squares = []
-
-let xP = 0
-let yP = 0
-
-let x = 15
-let y = 0
+let piece = []
 
 function setup(){
     let canvas = createCanvas(scale*squareNum, scale*squareNum)
     document.querySelector('main').appendChild(canvas.elt)
 
+    piece.push(new Piece(3,0))
+    // piece.push(new Piece(4,0))
+
     newBoard()
-    setInterval(function(){console.log('a'); falling()}, 1000)
+
+    setInterval(function(){
+
+        for(p=0; p<piece.length; p++){
+
+          piece[p].falling()
+
+        }
+
+    }, 1000)
 }
 
 function draw(){
-    x = constrain(x, 0, squareNum-1)
 
-    squares[y][x] = 1
+    for(p=0; p<piece.length; p++){
+
+        piece[p].x = constrain(piece[p].x, 0, squareNum-1)
+        piece[p].y = constrain(piece[p].y, 0, squareNum-1)
+
+        squares[piece[p].y][piece[p].x] = 1
+
+    }
 
     background(0)
     checkGrid()
-}
-
-
-function checkCollision(){
-    if(y >= squareNum){
-      y = 0
-      checkTetris()
-    }
-    else if (squares[y][x] == 1){
-      y = 0
-      checkTetris()
-      // console.log('a');
-    }
-    else{
-      squares[yP][xP] = 0
-    }
-
 }
 
 function checkGrid(){
@@ -58,20 +54,19 @@ function checkGrid(){
 
 function checkTetris(){
 
-  for(i=0; i<squareNum; i++){
-      full = true
+    for(i=0; i<squareNum; i++){
+        full = true
 
-      for(j=0; j<squareNum; j++){
-          if (squares[i][j] == 0 ){
-              full = false
-          }
-      }
+        for(j=0; j<squareNum; j++){
+            if (squares[i][j] == 0 ){
+                full = false
+            }
+        }
 
-      if (full == true){
-          tetris(i)
-      }
-  }
-
+        if (full == true){
+            tetris(i)
+        }
+    }
 }
 
 function newBoard(){
@@ -88,18 +83,6 @@ function newBoard(){
     }
 }
 
-function falling(){
-
-  previousPosition()
-  y ++
-  checkCollision()
-}
-
-function previousPosition(){
-  xP = x
-  yP = y
-}
-
 function tetris(line){
 
     for(i=line; i>0; i--){
@@ -108,14 +91,18 @@ function tetris(line){
     squares[0] = [0,0,0,0,0]
 }
 
-// actually I cant avoid creating a new piece when hitting any random key
+// actually I cant avoid creating a new piece[0] when hitting any random key
 window.addEventListener("keydown", ev=>{
 
-    previousPosition()
+    for(p=0; p<piece.length; p++){
 
-    if (ev.code == "ArrowRight" && squares[y][x+1] == 0) x ++
-    if (ev.code == "ArrowLeft"  && squares[y][x-1] == 0)  x --
-    if (ev.code == "ArrowDown")  y ++
+        piece[p].previousPosition()
 
-    checkCollision()
+        if (ev.code == "ArrowRight") piece[p].x ++
+        if (ev.code == "ArrowLeft")  piece[p].x --
+        if (ev.code == "ArrowDown")  piece[p].y ++
+
+        piece[p].checkCollision()
+
+    }
 })
