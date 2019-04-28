@@ -18,7 +18,7 @@ function setup(){
 
         for(p=0; p<piece.length; p++){
 
-          piece[p].falling()
+          piece[0].falling()
 
         }
 
@@ -91,18 +91,11 @@ function tetris(line){
     squares[0] = [0,0,0,0,0]
 }
 
-// actually I cant avoid creating a new piece[0] when hitting any random key
 window.addEventListener("keydown", ev=>{
-
     for(p=0; p<piece.length; p++){
-
         piece[p].previousPosition()
-
-        if (ev.code == "ArrowRight") piece[p].x ++
-        if (ev.code == "ArrowLeft")  piece[p].x --
-        if (ev.code == "ArrowDown")  piece[p].y ++
-
-        piece[p].checkCollision()
-
+        if (ev.code == "ArrowRight" && squares[piece[p].y][piece[0].x+1] == 0) {piece[p].x ++; piece[p].checkCollision()}
+        if (ev.code == "ArrowLeft"  && squares[piece[p].y][piece[0].x-1] == 0) {piece[p].x --; piece[p].checkCollision()}
+        if (ev.code == "ArrowDown") {piece[p].y ++; piece[p].checkCollision()}
     }
 })
