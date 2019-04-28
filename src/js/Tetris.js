@@ -1,37 +1,55 @@
-let scale = 60
-let squareNum = 5
+let scale = 20
+let squareNum = 30
 let grid = []
 
 let squares = []
 
-x = 3
-y = 1
+let xP = 0
+let yP = 0
+
+let x = 15
+let y = 0
 
 function setup(){
     let canvas = createCanvas(scale*squareNum, scale*squareNum)
     document.querySelector('main').appendChild(canvas.elt)
-
+    // frameRate(5)
     reset()
-    squares[x][y] = 1
 }
 
 function draw(){
+    x = constrain(x, 0, squareNum-1)
+
+    squares[x][y] = 1
+
     background(0)
-    
     checkGrid()
+    console.log(x, ' ', y);
+}
+
+function checkCollision(){
+    if(y >= squareNum){
+      y = 0
+    }
+    else if (squares[x][y] == 1){
+      y = 0
+      console.log('a');
+    }
+    else{
+      squares[xP][yP] = 0
+    }
 
 }
 
 function checkGrid(){
     for (i in squares){
-      for(j=0; j<squareNum; j++){
-        if(squares[i][j] == 1){
-          console.log('a');
-          fill(255)
-          rect(20,10,20,20)
+        for(j in squares[i]){
+            if(squares[i][j] == 1){
+                fill(255, 50, 100)
+                noStroke()
+                rect(scale*i,scale*j,scale,scale)
+            }
         }
-
-      }
     }
 }
 
@@ -39,17 +57,25 @@ function reset(){
     squares = []
 
     for (i=0; i<squareNum; i++){
-      y = []
+      group = []
 
       for(j=0; j<squareNum; j++){
-        y.push(0)
+        group.push(0)
       }
 
-      squares.push(y)
+      squares.push(group)
     }
 }
 
+window.addEventListener("keydown", ev=>{
+    xP = x
+    yP = y
 
-window.addEventListener("keydown", ev=>{ if (ev.code == "ArrowRight") piece[piece.length -1].move(1)})
-window.addEventListener("keydown", ev=>{ if (ev.code == "ArrowLeft") piece[piece.length -1].move(-1)})
-window.addEventListener("keydown", ev=>{ if (ev.code == "ArrowDown") piece[piece.length -1].move(0)})
+
+    if (ev.code == "ArrowRight") x += 1
+    if (ev.code == "ArrowLeft")  x -= 1
+    if (ev.code == "ArrowDown") y += 1
+    if (ev.code == "ArrowUp")  y -= 1
+
+    checkCollision()
+})
