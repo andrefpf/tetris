@@ -1,5 +1,5 @@
-# tetris
-p5 sucks, python is the future
+# Tetris
+I think you may know what is this project about... =)
 
 # How to use it 
 This project uses pygame library, you need to install it.
